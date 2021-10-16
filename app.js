@@ -7,38 +7,41 @@
 // requiring module
 var reader = require('xlsx');
 const ExcelJS = require('exceljs');
-const { app, BrowserWindow } = require('electron');
+const pdfmake = require('./pdfmake');
 
-// function for opening window
-function createWindow() {
-    const win = new BrowserWindow({
-        width: 800,
-        height: 600,
-        webPreferences: {
-            nodeIntegration: true
-        }
-    });
-    win.removeMenu();
-    win.loadFile('index.html');
-    //win.webContents.openDevTools();
-}
+// const { app, BrowserWindow } = require('electron');
 
-// if app ready open control window
-app.whenReady().then(() => {
-    createWindow();
-});
+// // function for opening window
+// function createWindow() {
+//     const win = new BrowserWindow({
+//         width: 800,
+//         height: 600,
+//         webPreferences: {
+//             nodeIntegration: true
+//         }
+//     });
+//     win.removeMenu();
+//     win.loadFile('index.html');
+//     //win.webContents.openDevTools();
+// }
 
-// if any butten is pressed for closing close application
-app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') {
-        app.quit();
-    }
-});
+// // if app ready open control window
+// app.whenReady().then(() => {
+//     createWindow();
+// });
+
+// // if any butten is pressed for closing close application
+// app.on('window-all-closed', () => {
+//     if (process.platform !== 'darwin') {
+//         app.quit();
+//     }
+// });
 
 let data = [];
 let data2 = [];
 
 console.log("App starting");
+main();
 console.log("Main Done");
 
 /* **************************************************************** */
@@ -46,7 +49,8 @@ console.log("Main Done");
 /* **************************************************************** */
 async function main() {
     await readFileToJson("./20210927_Dierbestandsboek.xlsx");
-    writeVentielen("./ventiellijst 2345.xlsx");
+    //writeVentielen("./ventiellijst 2345.xlsx");
+    pdfmake.createPDF();
     console.log("async Main Done");
 }
 
