@@ -50,7 +50,7 @@ console.log("Main Done");
 async function main() {
     await readFileToJson("./20210927_Dierbestandsboek.xlsx");
     //writeVentielen("./ventiellijst 2345.xlsx");
-    pdfmake.createPDF();
+    pdfmake.createPDF(data);
     console.log("async Main Done");
 }
 
