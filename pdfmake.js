@@ -16,7 +16,7 @@ const { data } = require('jquery');
 
 var pageBuilding = {
     name: 'Stal 4',
-    cellHeigt: 10,
+    fontSize: 8.5,
     LafUp: true,
     RafUp: true,
     VentPerAfd: 10,
@@ -29,12 +29,12 @@ var pageBuilding = {
 };
 var pageBuilding2 = {
     name: 'Stal 4',
-    cellHeigt: 10,
+    fontSize: 8.5,
     LafUp: false,
     RafUp: false,
     VentPerAfd: 10,
-    LStartVent: 39,
-    LStartAfd: 101,
+    LStartVent: 101,
+    LStartAfd: 39,
     LAantalAfd: 5,
     RStartVent: 151,
     RStartAfd: 34,
@@ -42,7 +42,7 @@ var pageBuilding2 = {
 };
 var pageBuilding3 = {
     name: 'Stal 2',
-    cellHeigt: 10,
+    fontSize: 10,
     LafUp: true,
     RafUp: false,
     VentPerAfd: 4,
@@ -55,7 +55,7 @@ var pageBuilding3 = {
 };
 var pageBuilding4 = {
     name: 'Stal 3',
-    cellHeigt: 10,
+    fontSize: 10,
     LafUp: true,
     RafUp: false,
     VentPerAfd: 5,
@@ -68,7 +68,7 @@ var pageBuilding4 = {
 };
 var pageBuilding5 = {
     name: 'Stal 5',
-    cellHeigt: 10,
+    fontSize: 10,
     LafUp: true,
     RafUp: true,
     VentPerAfd: 8,
@@ -81,7 +81,7 @@ var pageBuilding5 = {
 };
 var pageBuilding6 = {
     name: 'Stal 5',
-    cellHeigt: 10,
+    fontSize: 10,
     LafUp: false,
     RafUp: false,
     VentPerAfd: 8,
@@ -98,8 +98,19 @@ async function createPDF(inputData) {
         pageSize: 'A4',
         pageOrientation: 'landscape',
         pageMargins: [10, 10, 10, 10],
+        styles: {
+            table1: {
+                fontSize: 8.5,
+                bold: false
+            },
+            table2: {
+                fontSize: 16,
+                bold: true,
+                margin: [0, 10, 0, 5]
+            }
+        },
         defaultStyle: {
-            fontSize: 9
+            fontSize: 10
         },
         content: []
     };
@@ -107,25 +118,8 @@ async function createPDF(inputData) {
 
     };
 
-    // table.table.body.push(['50', '1', '112', '', '', '', '', '', '', '53', '25', '116', '', '', '', '', '', '']);
-
-    // var LTellerVent = pageBuilding.LStartVent;
-    // var RTellerVent = pageBuilding.RStartVent;
-    // for (var LTellerAfd = pageBuilding.LStartAfd, RTellerAfd = pageBuilding.RStartAfd; ((pageBuilding.LStartAfd + pageBuilding.LAantalAfd) > LTellerAfd) || ((pageBuilding.RStartAfd + pageBuilding.RAantalAfd) > RTellerAfd); LTellerAfd++, RTellerAfd++) {
-    //     table.table.body.push([LTellerAfd, LTellerVent, '112', '', '', '', '', '', '', RTellerAfd, RTellerVent, '116', '', '', '', '', '', '']);
-    //     for (var tellerVent = 1; tellerVent < pageBuilding.VentPerAfd - 1; tellerVent++){
-    //         LTellerVent++;
-    //         RTellerVent++;
-    //         table.table.body.push(['', LTellerVent, '112', '', '', '', '', '', '', '', RTellerVent, '116', '', '', '', '', '', '']);
-    //     }
-    //     LTellerVent++;
-    //     RTellerVent++;
-    //     table.table.body.push(['', LTellerVent, '112', '', '', '', '', '', '', '', RTellerVent, '116', '', '', '', '', '', '']);
-    //     LTellerVent++;
-    //     RTellerVent++;
-    // }
-
     var table = {
+        style: 'table1',
         table: {
             headerRows: 1,
             widths: [20, 20, '*', '*', '*', '*', '*', '*', '*', 20, 20, '*', '*', '*', '*', '*', '*', '*'],
@@ -133,11 +127,11 @@ async function createPDF(inputData) {
             body: []
         }, layout: {
 				hLineWidth: function (i, node) {
-					// return (i === 0 || i === node.table.body.length) ? 2 : 1;
-                    return 0.1;
+					return (i === 0 || i == 1 || i === node.table.body.length || (i - 1) % 10 == 0) ? 2 : 0.1;
+                    //return 0.1;
 				},
 				vLineWidth: function (i, node) {
-					// return (i === 0 || i === node.table.widths.length) ? 2 : 1;
+					return (i === 0 || i == 1 || i == 2 || i == 9 || i == 10 || i == 11 || i === node.table.widths.length) ? 2 : 0.1;
                     return 0.1;
 				},
 				hLineColor: function (i, node) {
@@ -152,8 +146,8 @@ async function createPDF(inputData) {
 				// vLineStyle: function (i, node) { return {dash: { length: 10, space: 4 }}; },
 				paddingLeft: function(i, node) { return 5; },
 				paddingRight: function(i, node) { return 5; },
-				paddingTop: function(i, node) { return 0.2; },
-				paddingBottom: function(i, node) { return 0.2; },
+				paddingTop: function(i, node) { return 0.1; },
+				paddingBottom: function(i, node) { return 0.1; },
 				// fillColor: function (rowIndex, node, columnIndex) { return null; }
 			}
     };
@@ -194,7 +188,7 @@ async function createPDF(inputData) {
 			}
     };
     buildPage(table, pageBuilding2, inputData);
-    docDefenition.content.push({text: 'Weeknummer: ', alignment: 'center', style: 'subheader'});
+    docDefenition.content.push({text: 'Weeknummer: ', pageBreak: 'before', alignment: 'center', style: 'subheader'});
     docDefenition.content.push(table);
     
     table = {
@@ -291,7 +285,7 @@ function buildTable(targetTable, pageInfo, inputData, LTellerAfd, RTellerAfd, LT
     var LventWaarde, RventWaarde;
     LventWaarde = searchVentielWaarde(inputData, pageInfo.name, LTellerAfd, LTellerVent);
     RventWaarde = searchVentielWaarde(inputData, pageInfo.name, RTellerAfd, RTellerVent);
-    targetTable.table.body.push([LTellerAfd, LTellerVent, LventWaarde, '', '', '', '', '', '', RTellerAfd, RTellerVent, RventWaarde, '', '', '', '', '', '']);
+    targetTable.table.body.push([{text: LTellerAfd, rowSpan: pageInfo.VentPerAfd, alignment: 'center'}, LTellerVent, LventWaarde, '', '', '', '', '', '', {text: RTellerAfd, rowSpan: pageInfo.VentPerAfd, alignment: 'center'}, RTellerVent, RventWaarde, '', '', '', '', '', '']);
     for (var tellerVent = 1; tellerVent < pageInfo.VentPerAfd - 1; tellerVent++){
         LTellerVent++;
         RTellerVent++;
