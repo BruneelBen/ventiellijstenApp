@@ -16,7 +16,7 @@ const { data } = require('jquery');
 
 var pageBuilding = [{
         name: 'Stal 4',
-        fontSize: 8.5,
+        fontSize: 9.1,
         LafUp: true,
         RafUp: true,
         VentPerAfd: 10,
@@ -29,7 +29,7 @@ var pageBuilding = [{
     },
         {
         name: 'Stal 4',
-        fontSize: 8.5,
+        fontSize: 9.1,
         LafUp: false,
         RafUp: false,
         VentPerAfd: 10,
@@ -42,7 +42,7 @@ var pageBuilding = [{
     },
     {
         name: 'Stal 2',
-        fontSize: 10,
+        fontSize: 12,
         LafUp: true,
         RafUp: false,
         VentPerAfd: 4,
@@ -55,7 +55,7 @@ var pageBuilding = [{
     },
     {
         name: 'Stal 3',
-        fontSize: 10,
+        fontSize: 12,
         LafUp: true,
         RafUp: false,
         VentPerAfd: 5,
@@ -68,7 +68,7 @@ var pageBuilding = [{
     },
     {
         name: 'Stal 5',
-        fontSize: 10,
+        fontSize: 12,
         LafUp: true,
         RafUp: true,
         VentPerAfd: 8,
@@ -81,7 +81,7 @@ var pageBuilding = [{
     },
     {
         name: 'Stal 5',
-        fontSize: 10,
+        fontSize: 12,
         LafUp: false,
         RafUp: false,
         VentPerAfd: 8,
@@ -98,7 +98,7 @@ async function createPDF(inputData) {
     var docDefenition = {
         pageSize: 'A4',
         pageOrientation: 'landscape',
-        pageMargins: [10, 10, 10, 10],
+        pageMargins: [5, 5, 5, 5],
         styles: {},
         defaultStyle: {
             fontSize: 10
@@ -140,7 +140,8 @@ async function createPDF(inputData) {
                     paddingLeft: function(i, node) { return 5; },
                     paddingRight: function(i, node) { return 5; },
                     paddingTop: function(i, node) { return 0.1; },
-                    paddingBottom: function(i, node) { return 0.1; },
+                    paddingBottom: function (i, node) { return 0.1; },
+                    defaultBorder: false
                 }
         };
         // build the table feurer with input Data
@@ -168,7 +169,65 @@ function buildPage(targetTable, pageInfo, inputData)
     var LTellerVent = pageInfo.LStartVent;
     var RTellerVent = pageInfo.RStartVent;
 
-    targetTable.table.body.push([ {text: pageInfo.name, colSpan: 2, alignment: 'center'}, {}, 'ma', 'di', 'wo', 'do', 'vr', 'za', 'zo', {text: '', colSpan: 2, alignment: 'center'}, {}, 'ma', 'di', 'wo', 'do', 'vr', 'za', 'zo']);
+    targetTable.table.body.push([{
+                text: pageInfo.name,                // L afdeling
+                border: [false, false, true, true],
+                alignment: 'center',
+                colSpan: 2
+            }, {
+                border: [true, true, true, true],   // L ventiel nummer
+                text: ''
+            }, {
+                border: [true, true, true, true],   // L ventiel waarde
+                text: 'ma'
+            }, {
+                border: [true, true, true, true],
+                text: 'di'
+			}, {
+                border: [true, true, true, true],
+                text: 'wo'
+            }, {
+                border: [true, true, true, true],
+                text: 'do'
+            }, {
+                border: [true, true, true, true],
+                text: 'vr'
+            }, {
+                border: [true, true, true, true],
+                text: 'za'
+            }, {
+                border: [true, true, true, true],
+                text: 'zo'
+            }, {
+                border: [true, false, true, true], // R afdeling
+                text: '',
+                alignment: 'center',
+                colSpan: 2
+            }, {
+                border: [true, true, true, true], // R ventiel nummer
+                text: ''
+            }, {
+                border: [true, true, true, true], // R ventiel waarde
+                text: 'ma'
+            }, {
+                border: [true, true, true, true],
+                text: 'di'
+            }, {
+                border: [true, true, true, true],
+                text: 'wo'
+            }, {
+                border: [true, true, true, true],
+                text: 'do'
+            }, {
+                border: [true, true, true, true],
+                text: 'vr'
+            }, {
+                border: [true, true, true, true],
+                text: 'za'
+            }, {
+                border: [true, true, true, true],
+                text: 'zo'
+            }]);
 
     for (var LTellerAfd = pageInfo.LStartAfd, RTellerAfd = pageInfo.RStartAfd;
         (pageInfo.LafUp ? ((pageInfo.LStartAfd + pageInfo.LAantalAfd) > LTellerAfd) : ((pageInfo.LStartAfd - pageInfo.LAantalAfd) < LTellerAfd)) ||     // nakijken of op of af moet lopen
@@ -186,14 +245,188 @@ function buildTable(targetTable, pageInfo, inputData, LTellerAfd, RTellerAfd, LT
     if (pageInfo.LafUp ? (LTellerAfd >= pageInfo.LStartAfd + pageInfo.LAantalAfd) : (LTellerAfd <= pageInfo.LStartAfd - pageInfo.LAantalAfd))
     {
         RventWaarde = searchVentielWaarde(inputData, pageInfo.name, RTellerAfd, RTellerVent);
-        targetTable.table.body.push(['', '', '', '', '', '', '', '', '', {text: RTellerAfd, rowSpan: pageInfo.VentPerAfd, alignment: 'center'}, RTellerVent, RventWaarde, '', '', '', '', '', '']);
+        targetTable.table.body.push([{
+                text: '',                           // L afdeling
+                rowSpan: pageInfo.VentPerAfd,
+                border: [false, false, false, false],
+                alignment: 'center'
+            }, {
+                border: [false, false, false, false],   // L ventiel nummer
+                text: ''
+            }, {
+                border: [false, false, false, false],   // L ventiel waarde
+                text: ''
+            }, {
+                border: [false, false, false, false],
+                text: ''
+			}, {
+                border: [false, false, false, false],
+                text: ''
+            }, {
+                border: [false, false, false, false],
+                text: ''
+            }, {
+                border: [false, false, false, false],
+                text: ''
+            }, {
+                border: [false, false, false, false],
+                text: ''
+            }, {
+                border: [false, false, false, false],
+                text: ''
+            }, {
+                rowSpan: pageInfo.VentPerAfd,       // R afdeling
+                border: [true, true, true, true],
+                text: RTellerAfd,
+                alignment: 'center'
+            }, {
+                border: [true, true, true, true], // R ventiel nummer
+                text: RTellerVent
+            }, {
+                border: [true, true, true, true], // R ventiel waarde
+                text: RventWaarde
+            }, {
+                border: [true, true, true, true],
+                text: ''
+            }, {
+                border: [true, true, true, true],
+                text: ''
+            }, {
+                border: [true, true, true, true],
+                text: ''
+            }, {
+                border: [true, true, true, true],
+                text: ''
+            }, {
+                border: [true, true, true, true],
+                text: ''
+            }, {
+                border: [true, true, true, true],
+                text: ''
+            }]);
     } else if (pageInfo.RafUp ? (RTellerAfd >= pageInfo.RStartAfd + pageInfo.RAantalAfd) : (RTellerAfd <= pageInfo.RStartAfd - pageInfo.RAantalAfd)) {
         LventWaarde = searchVentielWaarde(inputData, pageInfo.name, LTellerAfd, LTellerVent);
-        targetTable.table.body.push([{text: LTellerAfd, rowSpan: pageInfo.VentPerAfd, alignment: 'center'}, LTellerVent, LventWaarde, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '']);
+        targetTable.table.body.push([{
+                text: LTellerAfd,                   // L afdeling
+                rowSpan: pageInfo.VentPerAfd,
+                border: [true, true, true, true],
+                alignment: 'center'
+            }, {
+                border: [true, true, true, true],   // L ventiel nummer
+                text: LTellerVent
+            }, {
+                border: [true, true, true, true],   // L ventiel waarde
+                text: LventWaarde
+            }, {
+                border: [true, true, true, true],
+                text: ''
+			}, {
+                border: [true, true, true, true],
+                text: ''
+            }, {
+                border: [true, true, true, true],
+                text: ''
+            }, {
+                border: [true, true, true, true],
+                text: ''
+            }, {
+                border: [true, true, true, true],
+                text: ''
+            }, {
+                border: [true, true, true, true],
+                text: ''
+            }, {
+                rowSpan: pageInfo.VentPerAfd,       // R afdeling
+                border: [false, false, false, false],
+                text: '',
+                alignment: 'center'
+            }, {
+                border: [false, false, false, false], // R ventiel nummer
+                text: ''
+            }, {
+                border: [false, false, false, false], // R ventiel waarde
+                text: ''
+            }, {
+                border: [false, false, false, false],
+                text: ''
+            }, {
+                border: [false, false, false, false],
+                text: ''
+            }, {
+                border: [false, false, false, false],
+                text: ''
+            }, {
+                border: [false, false, false, false],
+                text: ''
+            }, {
+                border: [false, false, false, false],
+                text: ''
+            }, {
+                border: [false, false, false, false],
+                text: ''
+            }]);
     } else {
         LventWaarde = searchVentielWaarde(inputData, pageInfo.name, LTellerAfd, LTellerVent);
         RventWaarde = searchVentielWaarde(inputData, pageInfo.name, RTellerAfd, RTellerVent);
-        targetTable.table.body.push([{text: LTellerAfd, rowSpan: pageInfo.VentPerAfd, alignment: 'center'}, LTellerVent, LventWaarde, '', '', '', '', '', '', {text: RTellerAfd, rowSpan: pageInfo.VentPerAfd, alignment: 'center'}, RTellerVent, RventWaarde, '', '', '', '', '', '']);
+        targetTable.table.body.push([{
+                text: LTellerAfd,                           // L afdeling
+                rowSpan: pageInfo.VentPerAfd,
+                border: [true, true, true, true],
+                alignment: 'center'
+            }, {
+                border: [true, true, true, true],   // L ventiel nummer
+                text: LTellerVent
+            }, {
+                border: [true, true, true, true],   // L ventiel waarde
+                text: LventWaarde
+            }, {
+                border: [true, true, true, true],
+                text: ''
+			}, {
+                border: [true, true, true, true],
+                text: ''
+            }, {
+                border: [true, true, true, true],
+                text: ''
+            }, {
+                border: [true, true, true, true],
+                text: ''
+            }, {
+                border: [true, true, true, true],
+                text: ''
+            }, {
+                border: [true, true, true, true],
+                text: ''
+            }, {
+                rowSpan: pageInfo.VentPerAfd,       // R afdeling
+                border: [true, true, true, true],
+                text: RTellerAfd,
+                alignment: 'center'
+            }, {
+                border: [true, true, true, true], // R ventiel nummer
+                text: RTellerVent
+            }, {
+                border: [true, true, true, true], // R ventiel waarde
+                text: RventWaarde
+            }, {
+                border: [true, true, true, true],
+                text: ''
+            }, {
+                border: [true, true, true, true],
+                text: ''
+            }, {
+                border: [true, true, true, true],
+                text: ''
+            }, {
+                border: [true, true, true, true],
+                text: ''
+            }, {
+                border: [true, true, true, true],
+                text: ''
+            }, {
+                border: [true, true, true, true],
+                text: ''
+            }]);
     }
     for (var tellerVent = 1; tellerVent < pageInfo.VentPerAfd; tellerVent++){
         LTellerVent++;
@@ -201,14 +434,188 @@ function buildTable(targetTable, pageInfo, inputData, LTellerAfd, RTellerAfd, LT
         if (pageInfo.LafUp ? (LTellerAfd >= pageInfo.LStartAfd + pageInfo.LAantalAfd) : (LTellerAfd <= pageInfo.LStartAfd - pageInfo.LAantalAfd))
         {
             RventWaarde = searchVentielWaarde(inputData, pageInfo.name, RTellerAfd, RTellerVent);
-            targetTable.table.body.push(['', '', '', '', '', '', '', '', '', '', RTellerVent, RventWaarde, '', '', '', '', '', '']);
+            targetTable.table.body.push([{
+                text: '',                           // L afdeling
+                rowSpan: pageInfo.VentPerAfd,
+                border: [false, false, false, false],
+                alignment: 'center'
+            }, {
+                border: [false, false, false, false],   // L ventiel nummer
+                text: ''
+            }, {
+                border: [false, false, false, false],   // L ventiel waarde
+                text: ''
+            }, {
+                border: [false, false, false, false],
+                text: ''
+			}, {
+                border: [false, false, false, false],
+                text: ''
+            }, {
+                border: [false, false, false, false],
+                text: ''
+            }, {
+                border: [false, false, false, false],
+                text: ''
+            }, {
+                border: [false, false, false, false],
+                text: ''
+            }, {
+                border: [false, false, false, false],
+                text: ''
+            }, {
+                rowSpan: pageInfo.VentPerAfd,       // R afdeling
+                border: [true, true, true, true],
+                text: '',
+                alignment: 'center'
+            }, {
+                border: [true, true, true, true], // R ventiel nummer
+                text: RTellerVent
+            }, {
+                border: [true, true, true, true], // R ventiel waarde
+                text: RventWaarde
+            }, {
+                border: [true, true, true, true],
+                text: ''
+            }, {
+                border: [true, true, true, true],
+                text: ''
+            }, {
+                border: [true, true, true, true],
+                text: ''
+            }, {
+                border: [true, true, true, true],
+                text: ''
+            }, {
+                border: [true, true, true, true],
+                text: ''
+            }, {
+                border: [true, true, true, true],
+                text: ''
+            }]);
         } else if (pageInfo.RafUp ? (RTellerAfd >= pageInfo.RStartAfd + pageInfo.RAantalAfd) : (RTellerAfd <= pageInfo.RStartAfd - pageInfo.RAantalAfd)) {
             LventWaarde = searchVentielWaarde(inputData, pageInfo.name, LTellerAfd, LTellerVent);
-            targetTable.table.body.push(['', LTellerVent, LventWaarde, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '']);
+            targetTable.table.body.push([{
+                text: '',                           // L afdeling
+                rowSpan: pageInfo.VentPerAfd,
+                border: [true, true, true, true],
+                alignment: 'center'
+            }, {
+                border: [true, true, true, true],   // L ventiel nummer
+                text: LTellerVent
+            }, {
+                border: [true, true, true, true],   // L ventiel waarde
+                text: LventWaarde
+            }, {
+                border: [true, true, true, true],
+                text: ''
+			}, {
+                border: [true, true, true, true],
+                text: ''
+            }, {
+                border: [true, true, true, true],
+                text: ''
+            }, {
+                border: [true, true, true, true],
+                text: ''
+            }, {
+                border: [true, true, true, true],
+                text: ''
+            }, {
+                border: [true, true, true, true],
+                text: ''
+            }, {
+                rowSpan: pageInfo.VentPerAfd,       // R afdeling
+                border: [false, false, false, false],
+                text: '',
+                alignment: 'center'
+            }, {
+                border: [false, false, false, false], // R ventiel nummer
+                text: ''
+            }, {
+                border: [false, false, false, false], // R ventiel waarde
+                text: ''
+            }, {
+                border: [false, false, false, false],
+                text: ''
+            }, {
+                border: [false, false, false, false],
+                text: ''
+            }, {
+                border: [false, false, false, false],
+                text: ''
+            }, {
+                border: [false, false, false, false],
+                text: ''
+            }, {
+                border: [false, false, false, false],
+                text: ''
+            }, {
+                border: [false, false, false, false],
+                text: ''
+            }]);
         } else {
             LventWaarde = searchVentielWaarde(inputData, pageInfo.name, LTellerAfd, LTellerVent);
             RventWaarde = searchVentielWaarde(inputData, pageInfo.name, RTellerAfd, RTellerVent);
-            targetTable.table.body.push(['', LTellerVent, LventWaarde, '', '', '', '', '', '', '', RTellerVent, RventWaarde, '', '', '', '', '', '']);
+            targetTable.table.body.push([{
+                text: '',                           // L afdeling
+                rowSpan: pageInfo.VentPerAfd,
+                border: [true, true, true, true],
+                alignment: 'center'
+            }, {
+                border: [true, true, true, true],   // L ventiel nummer
+                text: LTellerVent
+            }, {
+                border: [true, true, true, true],   // L ventiel waarde
+                text: LventWaarde
+            }, {
+                border: [true, true, true, true],
+                text: ''
+			}, {
+                border: [true, true, true, true],
+                text: ''
+            }, {
+                border: [true, true, true, true],
+                text: ''
+            }, {
+                border: [true, true, true, true],
+                text: ''
+            }, {
+                border: [true, true, true, true],
+                text: ''
+            }, {
+                border: [true, true, true, true],
+                text: ''
+            }, {
+                rowSpan: pageInfo.VentPerAfd,       // R afdeling
+                border: [true, true, true, true],
+                text: '',
+                alignment: 'center'
+            }, {
+                border: [true, true, true, true], // R ventiel nummer
+                text: RTellerVent
+            }, {
+                border: [true, true, true, true], // R ventiel waarde
+                text: RventWaarde
+            }, {
+                border: [true, true, true, true],
+                text: ''
+            }, {
+                border: [true, true, true, true],
+                text: ''
+            }, {
+                border: [true, true, true, true],
+                text: ''
+            }, {
+                border: [true, true, true, true],
+                text: ''
+            }, {
+                border: [true, true, true, true],
+                text: ''
+            }, {
+                border: [true, true, true, true],
+                text: ''
+            }]);
         }
     }
     LTellerVent++;
