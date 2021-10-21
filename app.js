@@ -7,11 +7,13 @@
 // requiring module
 var reader = require('xlsx');
 const pdfmake = require('./pdfmake');
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+
+let win;
 
 // function for opening window
 function createWindow() {
-    const win = new BrowserWindow({
+    win = new BrowserWindow({
         width: 800,
         height: 600,
         webPreferences: {
@@ -20,7 +22,8 @@ function createWindow() {
     });
     win.removeMenu();
     win.loadFile('index.html');
-    //win.webContents.openDevTools();
+    win.webContents.openDevTools();
+    //win.showInactive();
 }
 
 // if app ready open control window
@@ -37,6 +40,10 @@ app.on('window-all-closed', () => {
 
 ipcMain.on("test", function (evnt, arg) {
     console.log("test was good send this: " + arg);
+    win.hide();
+    console.log(dialog.showOpenDialogSync({ properties: ['openDirectory'] }));
+    win.show();
+    //askFile();
 });
 
 let data = [];
@@ -46,11 +53,17 @@ console.log("App starting");
 main();
 console.log("Main Done");
 
+async function askFile() {
+    var file;
+    file = dialog.showOpenDialogSync({ properties: ['openDirectory'] });
+    console.log(file);
+}
+
 /* **************************************************************** */
 /* async main function                                              */
 /* **************************************************************** */
 async function main() {
-    await readFileToJson("./20211017_Dierbestandsboek.xlsx");
+    await readFileToJson("C:/Users/Ben Bruneel/Documents/1 Documenten Ben Bruneel/ventiellijstenApp/20211017_Dierbestandsboek.xlsx");
     //writeVentielen("./ventiellijst 2345.xlsx");
     pdfmake.createPDF(data);
     console.log("async Main Done");

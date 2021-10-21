@@ -1,5 +1,5 @@
 
-//const { remote } = require('electron');
+const { dialog } = require('electron');
 const ipcRenderer = require('electron').ipcRenderer;
 
 let data = [];
@@ -13,6 +13,7 @@ var filePathBron, filePathDoel;
 const selectBronBtn = document.getElementById('selectBronBtn');
 selectBronBtn.onclick = e => {
     //selectBron();
+    //console.log(dialog.showOpenDialog({ properties: ['openFile'] }))
     ipcRenderer.send("test", "Hello world !!!");
 }
 
@@ -24,4 +25,11 @@ selectDoelBtn.onclick = e => {
 const convertBtn = document.getElementById('convertBtn');
 convertBtn.onclick = e => {
     //convert();
+}
+
+const fileBtn = document.getElementById('i_file');
+fileBtn.onchange = e => {
+    //convert();
+    console.log(e.target.files[0]);
+    var tmppath = URL.createObjectURL(e.target.files[0]);
 }
