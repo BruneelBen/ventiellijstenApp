@@ -9,31 +9,31 @@ var reader = require('xlsx');
 const pdfmake = require('./pdfmake');
 const { app, BrowserWindow, ipcMain } = require('electron');
 
-const { app, BrowserWindow } = require('electron');
-
 // function for opening window
 function createWindow() {
-     const win = new BrowserWindow({
-         width: 800,
-         height: 600,
-         webPreferences: {
-             nodeIntegration: true
-         }
-     });
-     win.removeMenu();
-     win.loadFile('index.html');
-     //win.webContents.openDevTools();
- 
- // if app ready open control window
- app.whenReady().then(() => {
-     createWindow();
- })
- // if any butten is pressed for closing close application
-  app.on('window-all-closed', () => {
-     if (process.platform !== 'darwin') {
-         app.quit();
-     }
- });
+    const win = new BrowserWindow({
+        width: 800,
+        height: 600,
+        webPreferences: {
+            nodeIntegration: true
+        }
+    });
+    win.removeMenu();
+    win.loadFile('index.html');
+    //win.webContents.openDevTools();
+}
+
+// if app ready open control window
+app.whenReady().then(() => {
+    createWindow();
+});
+
+// if any butten is pressed for closing close application
+app.on('window-all-closed', () => {
+    if (process.platform !== 'darwin') {
+        app.quit();
+    }
+});
 
 ipcMain.on("test", function (evnt, arg) {
     console.log("test was good send this: " + arg);
