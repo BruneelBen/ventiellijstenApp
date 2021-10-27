@@ -4,32 +4,60 @@ const ipcRenderer = require('electron').ipcRenderer;
 
 let data = [];
 
-// text input
-const inputFilePathBron = document.getElementById('inputFilePathBron');
-const inputFilePathDoel = document.getElementById('inputFilePathDoel');
-var filePathBron, filePathDoel;
+// all managed buttons
+const filePath = document.getElementById('filePath');
+const selectFileBtn = document.getElementById('selectFileBtn');
+const directoryPath = document.getElementById('directoryPath');
+const selectPathBtn = document.getElementById('selectPathBtn');
+const name = document.getElementById('name');
+const saveBtn = document.getElementById('saveBtn');
 
-// Buttons
-const selectBronBtn = document.getElementById('selectBronBtn');
-selectBronBtn.onclick = e => {
-    //selectBron();
-    //console.log(dialog.showOpenDialog({ properties: ['openFile'] }))
-    ipcRenderer.send("test", "Hello world !!!");
+// select file excel file
+selectFileBtn.onclick = e => {
+    ipcRenderer.send("btn", "selectFileBtn");
 }
 
-const selectDoelBtn = document.getElementById('selectDoelBtn');
-selectDoelBtn.onclick = e => {
-    //selectDoel();
+// select path
+selectPathBtn.onclick = e => {
+    ipcRenderer.send("btn", "selectPathBtn");
 }
 
-const convertBtn = document.getElementById('convertBtn');
-convertBtn.onclick = e => {
-    //convert();
+// select path
+saveBtn.onclick = e => {
+    ipcRenderer.send("btn", "saveBtn");
 }
 
-const fileBtn = document.getElementById('i_file');
-fileBtn.onchange = e => {
-    //convert();
-    console.log(e.target.files[0]);
-    var tmppath = URL.createObjectURL(e.target.files[0]);
+// past path to file
+filePath.onchange = e => {
+    ipcRenderer.send("filePath", filePath.value);
 }
+
+// past path
+directoryPath.onchange = e => {
+    ipcRenderer.send("directoryPath", directoryPath.value);
+}
+
+// name field
+name.onchange = e => {
+    ipcRenderer.send("name", name.value);
+}
+
+// load path selected file
+ipcRenderer.on("filePath", function (evnt, arg) {
+    filePath.value = arg;
+});
+
+// load path selected path
+ipcRenderer.on("directoryPath", function (evnt, arg) {
+    directoryPath.value = arg;
+});
+
+// load name
+ipcRenderer.on("name", function (evnt, arg) {
+    name.value = arg;
+});
+
+// reply to user from backend
+ipcRenderer.on("saveAction", function (evnt, arg) {
+    alert("arg");
+});

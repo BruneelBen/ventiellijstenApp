@@ -8,21 +8,24 @@
 var reader = require('xlsx');
 const pdfmake = require('./pdfmake');
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const path = require("path");
 
 let win;
+var filePath, directoryPath, name;
 
 // function for opening window
 function createWindow() {
     win = new BrowserWindow({
         width: 800,
         height: 600,
+        icon: __dirname + '/translate.png',
         webPreferences: {
             nodeIntegration: true
         }
     });
     win.removeMenu();
     win.loadFile('index.html');
-    win.webContents.openDevTools();
+    //win.webContents.openDevTools();
     //win.showInactive();
 }
 
@@ -38,34 +41,73 @@ app.on('window-all-closed', () => {
     }
 });
 
-ipcMain.on("test", function (evnt, arg) {
-    console.log("test was good send this: " + arg);
-    win.hide();
-    console.log(dialog.showOpenDialogSync({ properties: ['openDirectory'] }));
-    win.show();
-    //askFile();
+ipcMain.on("btn", function (evnt, arg) {
+    if (arg == "selectFileBtn") {
+        win.hide();
+        var newFilePath = dialog.showOpenDialogSync({ properties: ['openFile'], filters:
+                    [
+                        {
+                            "name": "Exel",
+                            "extensions": ["xlsx"]
+                        },
+                    ],});
+        win.show();
+        if (newFilePath != null) {
+            filePath = newFilePath;
+            evnt.reply("filePath", filePath);
+            name = path.basename(filePath.toString(), '.xlsx').toString();
+            evnt.reply("name", name);
+        }
+    } else if (arg == "selectPathBtn") {
+        win.hide();
+        var newDirectoryPath = dialog.showOpenDialogSync({ properties: ['openDirectory'] });
+        win.show();
+        if (newDirectoryPath != null) {
+            directoryPath = newDirectoryPath;
+            evnt.reply("directoryPath", directoryPath);
+        }
+    } else if (arg == "saveBtn") {
+        if (filePath != null && directoryPath != null && name != null) {
+            convert(filePath, directoryPath + "\\" + name + ".pdf");
+            dialog.showMessageBox({
+                title: "Save file",
+                icon: __dirname + '/translate.png',
+                message: "If notting wrong the document is written."
+            });
+        } else {
+            dialog.showMessageBox({
+                title: "Save file",
+                icon: __dirname + '/translate.png',
+                message: "Not all field are filled in for reading or writing the file."
+            });
+        }
+    }
+});
+
+ipcMain.on("filePath", function (evnt, arg) {
+    filePath = arg;
+});
+
+ipcMain.on("directoryPath", function (evnt, arg) {
+    directoryPath = arg;
+});
+
+ipcMain.on("name", function (evnt, arg) {
+    name = arg;
 });
 
 let data = [];
-let data2 = [];
 
 console.log("App starting");
-main();
+//main();
 console.log("Main Done");
-
-async function askFile() {
-    var file;
-    file = dialog.showOpenDialogSync({ properties: ['openDirectory'] });
-    console.log(file);
-}
 
 /* **************************************************************** */
 /* async main function                                              */
 /* **************************************************************** */
-async function main() {
-    await readFileToJson("C:/Users/Ben Bruneel/Documents/1 Documenten Ben Bruneel/ventiellijstenApp/20211017_Dierbestandsboek.xlsx");
-    //writeVentielen("./ventiellijst 2345.xlsx");
-    pdfmake.createPDF(data);
+async function convert(convertFilepath, saveFilePath) {
+    await readFileToJson(convertFilepath.toString());
+    pdfmake.createPDF(data, saveFilePath.toString());
     console.log("async Main Done");
 }
 

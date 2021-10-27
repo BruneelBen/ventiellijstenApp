@@ -12,7 +12,6 @@ var fonts = {
 var PdfPrinter = require('pdfmake');
 var printer = new PdfPrinter(fonts);
 var fs = require('fs');
-const { data } = require('jquery');
 
 var pageBuilding = [{
         name: 'Stal 4',
@@ -93,7 +92,7 @@ var pageBuilding = [{
         RAantalAfd: 3
     }];
 
-async function createPDF(inputData) {
+async function createPDF(inputData, savePath) {
     // start building the page
     var docDefenition = {
         pageSize: 'A4',
@@ -160,8 +159,11 @@ async function createPDF(inputData) {
 
     // save the document
     var pdfDoc = printer.createPdfKitDocument(docDefenition, option);
-    pdfDoc.pipe(fs.createWriteStream('document.pdf'));
+    console.log(savePath);
+    pdfDoc.pipe(fs.createWriteStream(savePath));
     pdfDoc.end();
+
+    return docDefenition;
 }
 
 function buildPage(targetTable, pageInfo, inputData)

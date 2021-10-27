@@ -5,19 +5,31 @@
 
 <head>
     <meta charset="UTF-8">
+    <script src='../node_modules/@pdftron/webviewer/webviewer.min.js'></script>
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
     <!--<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
     <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">-->
     <title>Ventiellijsten</title>
+    <link rel="stylesheet" href="index.css">
 </head>
 
-<body>
+<body style="margin: 0; padding: 0;">
     <h1>Ventiellijsten</h1>
-    <input type="file" id="i_file" value="">
-    <p id="inputFilePathBron">Bron</p><button id="selectBronBtn" class="button is-primary">select file</button>
-    <br/>
-    <p id="inputFilePathDoel">Doel</p><button id="selectDoelBtn" class="button is-primary">select file</button>
-    <button id="convertBtn" class="button is-primary">convert</button>
+    <div class="inputLine">
+        <div class="infoText">input file:</div>
+        <input class="inputText" id="filePath" type="text" alt="Select a file"></input>
+        <button id="selectFileBtn" class="button">select file</button>
+    </div>
+    <div class="inputLine">
+        <div class="infoText">target path:</div>
+        <input class="inputText" id="directoryPath" type="text" alt="Select a path"></input>
+        <button id="selectPathBtn" class="button">select path</button>
+    </div>
+    <div class="inputLine">
+        <div class="infoText">target name:</div>
+        <input class="inputText" id="name" type="text" alt="give a name"></input>
+        <button id="saveBtn" class="button">save</button>
+    </div>
     <script defer src="render.js"></script>
 </body>
 
