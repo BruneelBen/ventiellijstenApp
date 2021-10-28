@@ -2,15 +2,16 @@
 // Define font files
 var fonts = {
   Roboto: {
-    normal: 'fonts/Roboto-Regular.ttf',
-    bold: 'fonts/Roboto-Medium.ttf',
-    italics: 'fonts/Roboto-Italic.ttf',
-    bolditalics: 'fonts/Roboto-MediumItalic.ttf'
+    normal: './fonts/Roboto-Regular.ttf',
+    bold: './fonts/Roboto-Medium.ttf',
+    italics: './fonts/Roboto-Italic.ttf',
+    bolditalics: './fonts/Roboto-MediumItalic.ttf'
   }
 };
 
 var PdfPrinter = require('pdfmake');
 var printer = new PdfPrinter(fonts);
+const { dialog } = require('electron');
 var fs = require('fs');
 
 var pageBuilding = [{
@@ -160,7 +161,13 @@ async function createPDF(inputData, savePath) {
     // save the document
     var pdfDoc = printer.createPdfKitDocument(docDefenition, option);
     console.log(savePath);
-    pdfDoc.pipe(fs.createWriteStream(savePath));
+    pdfDoc.pipe(fs.createWriteStream(savePath)).on( 'error', function(err){
+        dialog.showMessageBox({
+            title: "Save file",
+            icon: __dirname + '/translate.png',
+            message: "someting worng: " + err
+        });
+    });
     pdfDoc.end();
 
     return docDefenition;

@@ -8,7 +8,8 @@
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
-    "lint": "echo \"No linting configured\""
+    "lint": "echo \"No linting configured\"",
+    "dist": "electron-builder"
   },
   "author": "Ben Bruneel",
   "license": "MIT",
@@ -56,6 +57,20 @@
     "@electron-forge/maker-squirrel": "^6.0.0-beta.50",
     "@electron-forge/maker-zip": "^6.0.0-beta.50",
     "devtron": "^1.4.0",
-    "electron": "8.0.2"
+    "electron": "8.0.2",
+    "electron-builder": "^22.13.1"
+  },
+  "build": {
+    "appId": "com.electron.ventiellijstenapp",
+    "extraFiles": [
+      "fonts"
+    ],
+    "productName": "Ventiellijsten converter",
+    "target": "NSIS",
+    "icon": "translate.png",
+    "nsis": {
+      "allowToChangeInstallationDirectory": true,
+      "oneClick": false
+    }
   }
 }
