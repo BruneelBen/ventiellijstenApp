@@ -8,7 +8,8 @@
 var reader = require('xlsx');
 const pdfmake = require('./pdfmake');
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
-const path = require("path");
+const path = require('path');
+const config = require('./config');
 
 let win;
 var filePath, directoryPath, name;

@@ -1,47 +1,67 @@
 
 // required librys
+const electron = require('electron');
 const path = require("path");
 const fs = require("fs");
 
-// read config file
-function read() {
+// make a class manage config savement
+class store {
+    constructor() {
+        const userDataPath = (electron.app || electron.remote.app).getPath('userData');
+        this.path = path.join(userDataPath, 'config.json');
+        this.read();
+    }
 
-}
+    // read config file
+    read() {
+        this.data = JSON.parseDataFile(this.path);
+    }
 
-// save config file
-function write() {
-    
-}
+    // save config file
+    write() {
+        fs.writeFileSync(this.path, JSON.stringify(this.data));
+    }
 
-// give all element IDs for make a overview
-function getList() {
+    // give all element IDs for make a overview
+    getList() {
+        return Object.keys(this.data);
+    }
 
-}
+    // give the numbers of rows that there are
+    Count() {
+        return Object.keys(this.data).length;
+    }
 
-// give the numbers of rows that there are
-function Count() {
+    // get the data of a element
+    getElement(elementId) {
+        return this.data[elementId];
+    }
 
-}
+    // update the data of a element
+    setElement(elmentId, jsonString) {
+        var data = this.data[elmentId];
+        if (data == null) {
+            return false;
+        }
+        this.data[elmentId] = jsonString;
+        return true;
+    }
 
-// get the data of a element
-function getElement(elementId) {
+    // delete a element
+    removeElement(elementId) {
+        this.data[elementId].removeElement;
+    }
 
-}
-
-// update the data of a element
-function setElement(elmentId, jsonString) {
-
-}
-
-// delete a element
-function removeElement(elementId) {
-
-}
-
-// add a new element
-function addElement(elmentIc, jsonString) {
-
+    // add a new element
+    addElement(elmentId, jsonString) {
+        var data = this.data[elmentId];
+        if (data == null) {
+            this.data[elmentId] = jsonString;
+            return true;
+        }
+        return false;
+    }
 }
 
 // export the function for other functions tu use
-module.exports = { read, write, getList, Count, getElement, setElement, removeElement, addElement };
+module.exports = { store };
