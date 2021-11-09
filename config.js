@@ -1,19 +1,30 @@
 
 // required librys
-const electron = require('electron');
+const { app, dialog } = require('electron');
 const path = require("path");
 const fs = require("fs");
+const { exit } = require('process');
 
 // make a class manage config savement
 class store {
     constructor() {
-        this.path = path.join(__dirname, 'config.json');
+        this.path = path.join('./config.json');
         this.read();
     }
 
     // read config file
     read() {
-        this.data = JSON.parse(fs.readFileSync(this.path));
+        try {
+            this.data = JSON.parse(fs.readFileSync(this.path));
+        } catch (error) {
+            dialog.showMessageBoxSync({
+                title: "can't read input file",
+                icon: __dirname + '/translate.png',
+                message: "Can not found the input file with settings."
+            });
+            console.log("ERROR: Can not found the input file with settings.");
+            app.exit(-1);
+        }
     }
 
     // save config file

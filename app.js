@@ -36,6 +36,8 @@ function createWindow() {
 // if app ready open control window
 app.whenReady().then(() => {
     createWindow();
+    const config = new Store();
+    pageBuilding = config.getElement("Bruneel-cox");
 });
 
 // if any butten is pressed for closing close application
@@ -105,9 +107,6 @@ let data = [];
 console.log("App starting");
 //main();
 console.log("Main Done");
-const config = new Store();
-pageBuilding = config.getElement("Bruneel-cox");
-config.write();
 
 /* **************************************************************** */
 /* async main function                                              */

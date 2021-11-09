@@ -1,6 +1,6 @@
 {
   "name": "my-electron-app",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Hello World!",
   "main": "app.js",
   "scripts": {
@@ -63,7 +63,8 @@
   "build": {
     "appId": "com.electron.ventiellijstenapp",
     "extraFiles": [
-      "fonts"
+      "fonts",
+      "config.json"
     ],
     "productName": "Ventiellijsten converter",
     "target": "NSIS",
