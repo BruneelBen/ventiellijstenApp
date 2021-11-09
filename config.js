@@ -7,19 +7,18 @@ const fs = require("fs");
 // make a class manage config savement
 class store {
     constructor() {
-        const userDataPath = (electron.app || electron.remote.app).getPath('userData');
-        this.path = path.join(userDataPath, 'config.json');
+        this.path = path.join(__dirname, 'config.json');
         this.read();
     }
 
     // read config file
     read() {
-        this.data = JSON.parseDataFile(this.path);
+        this.data = JSON.parse(fs.readFileSync(this.path));
     }
 
     // save config file
     write() {
-        fs.writeFileSync(this.path, JSON.stringify(this.data));
+        fs.writeFileSync(this.path, JSON.stringify(this.data, null, 4));
     }
 
     // give all element IDs for make a overview
@@ -39,29 +38,27 @@ class store {
 
     // update the data of a element
     setElement(elmentId, jsonString) {
-        var data = this.data[elmentId];
-        if (data == null) {
-            return false;
-        }
-        this.data[elmentId] = jsonString;
-        return true;
-    }
-
-    // delete a element
-    removeElement(elementId) {
-        this.data[elementId].removeElement;
-    }
-
-    // add a new element
-    addElement(elmentId, jsonString) {
-        var data = this.data[elmentId];
-        if (data == null) {
+        if (elmentId in this.data) {
             this.data[elmentId] = jsonString;
             return true;
         }
         return false;
     }
+
+    // delete a element
+    removeElement(elementId) {
+        delete this.data[elementId];
+    }
+
+    // add a new element
+    addElement(elmentId, jsonString) {
+        if (elmentId in this.data) {
+            return false;
+        }
+        this.data[elmentId] = jsonString;
+        return true;
+    }
 }
 
 // export the function for other functions tu use
-module.exports = { store };
+module.exports = store;

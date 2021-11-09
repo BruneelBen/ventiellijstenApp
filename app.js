@@ -9,7 +9,7 @@ var reader = require('xlsx');
 const pdfmake = require('./pdfmake');
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
-const config = require('./config');
+const Store = require('./config');
 
 let win;
 var filePath, directoryPath, name;
@@ -182,6 +182,8 @@ let data = [];
 console.log("App starting");
 //main();
 console.log("Main Done");
+const config = new Store();
+config.write();
 
 /* **************************************************************** */
 /* async main function                                              */
