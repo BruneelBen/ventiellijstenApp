@@ -8,10 +8,14 @@
 var reader = require('xlsx');
 const pdfmake = require('./pdfmake');
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
-const path = require("path");
+const path = require('path');
+const Store = require('./config');
 
 let win;
 var filePath, directoryPath, name;
+
+// page settings for pdf make this must be can generate by user
+var pageBuilding;
 
 // function for opening window
 function createWindow() {
@@ -32,6 +36,8 @@ function createWindow() {
 // if app ready open control window
 app.whenReady().then(() => {
     createWindow();
+    const config = new Store();
+    pageBuilding = config.getElement("Bruneel-cox");
 });
 
 // if any butten is pressed for closing close application
@@ -68,7 +74,7 @@ ipcMain.on("btn", function (evnt, arg) {
         }
     } else if (arg == "saveBtn") {
         if (filePath != null && directoryPath != null && name != null) {
-            convert(filePath, directoryPath + "\\" + name + ".pdf");
+            convert(filePath, directoryPath + "\\" + name + ".pdf", pageBuilding);
             dialog.showMessageBox({
                 title: "Save file",
                 icon: __dirname + '/translate.png',
@@ -105,9 +111,9 @@ console.log("Main Done");
 /* **************************************************************** */
 /* async main function                                              */
 /* **************************************************************** */
-async function convert(convertFilepath, saveFilePath) {
+async function convert(convertFilepath, saveFilePath, pageBuilding) {
     await readFileToJson(convertFilepath.toString());
-    pdfmake.createPDF(data, saveFilePath.toString());
+    pdfmake.createPDF(data, saveFilePath.toString(), pageBuilding);
     console.log("async Main Done");
 }
 
