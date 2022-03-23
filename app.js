@@ -10,6 +10,7 @@ const pdfmake = require('./pdfmake');
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 const Store = require('./config');
+const uploadData = require('./uploadData');
 
 let win;
 var filePath, directoryPath, name;
@@ -87,6 +88,21 @@ ipcMain.on("btn", function (evnt, arg) {
                 message: "Not all field are filled in for reading or writing the file."
             });
         }
+    } else if (arg == "timeBtn") {
+        if (filePath != null) {
+            upload(filePath, 1602);
+            dialog.showMessageBox({
+                title: "Save file",
+                icon: __dirname + '/translate.png',
+                message: "If notting wrong the upload is done."
+            });
+        } else {
+            dialog.showMessageBox({
+                title: "Save file",
+                icon: __dirname + '/translate.png',
+                message: "Not all field are filled in for reading the file."
+            });
+        }
     }
 });
 
@@ -109,12 +125,21 @@ console.log("App starting");
 console.log("Main Done");
 
 /* **************************************************************** */
-/* async main function                                              */
+/* async convert function                                              */
 /* **************************************************************** */
 async function convert(convertFilepath, saveFilePath, pageBuilding) {
     await readFileToJson(convertFilepath.toString());
     pdfmake.createPDF(data, saveFilePath.toString(), pageBuilding);
-    console.log("async Main Done");
+    console.log("async convert Done");
+}
+
+/* **************************************************************** */
+/* async upload function                                              */
+/* **************************************************************** */
+async function upload(convertFilepath, dataDate) {
+    await readFileToJson(convertFilepath.toString());
+    uploadData.sendToInflux(data, dataDate);
+    console.log("async upload Done");
 }
 
 /* **************************************************************** */

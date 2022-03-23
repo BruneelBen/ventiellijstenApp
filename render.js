@@ -27,6 +27,11 @@ saveBtn.onclick = e => {
     ipcRenderer.send("btn", "saveBtn");
 }
 
+// upload to influx
+timeBtn.onclick = e => {
+    ipcRenderer.send("btn", "timeBtn");
+}
+
 // past path to file
 filePath.onchange = e => {
     ipcRenderer.send("filePath", filePath.value);
