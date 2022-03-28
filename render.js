@@ -10,6 +10,7 @@ const selectFileBtn = document.getElementById('selectFileBtn');
 const directoryPath = document.getElementById('directoryPath');
 const selectPathBtn = document.getElementById('selectPathBtn');
 const name = document.getElementById('name');
+const fileDate = document.getElementById('fileDate');
 const saveBtn = document.getElementById('saveBtn');
 
 // select file excel file
@@ -28,8 +29,8 @@ saveBtn.onclick = e => {
 }
 
 // upload to influx
-timeBtn.onclick = e => {
-    ipcRenderer.send("btn", "timeBtn");
+fileDateBtn.onclick = e => {
+    ipcRenderer.send("btn", "fileDateBtn");
 }
 
 // past path to file
@@ -47,6 +48,11 @@ name.onchange = e => {
     ipcRenderer.send("name", name.value);
 }
 
+// name field
+fileDate.onchange = e => {
+    ipcRenderer.send("fileDate", fileDate.value);
+}
+
 // load path selected file
 ipcRenderer.on("filePath", function (evnt, arg) {
     filePath.value = arg;
@@ -60,6 +66,10 @@ ipcRenderer.on("directoryPath", function (evnt, arg) {
 // load name
 ipcRenderer.on("name", function (evnt, arg) {
     name.value = arg;
+});
+
+ipcRenderer.on("fileDate", function (evnt, arg) {
+    fileDate.value = arg;
 });
 
 // reply to user from backend

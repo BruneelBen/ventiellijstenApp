@@ -9,11 +9,12 @@ var reader = require('xlsx');
 const pdfmake = require('./pdfmake');
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
+const fs = require('fs');
 const Store = require('./config');
 const uploadData = require('./uploadData');
 
 let win;
-var filePath, directoryPath, name;
+var filePath, directoryPath, name, fileDate;
 
 // page settings for pdf make this must be can generate by user
 var pageBuilding;
@@ -64,6 +65,14 @@ ipcMain.on("btn", function (evnt, arg) {
             evnt.reply("filePath", filePath);
             name = path.basename(filePath.toString(), '.xlsx').toString();
             evnt.reply("name", name);
+            const stats = fs.statSync(filePath.toString());
+            console.log(stats);
+            fileDate = new Date(stats.mtime);
+            fileDate.setHours(0);
+            fileDate.setMinutes(0);
+            fileDate.setSeconds(0);
+            fileDate.setMilliseconds(0);
+            evnt.reply("fileDate", fileDate);
         }
     } else if (arg == "selectPathBtn") {
         win.hide();
@@ -88,9 +97,9 @@ ipcMain.on("btn", function (evnt, arg) {
                 message: "Not all field are filled in for reading or writing the file."
             });
         }
-    } else if (arg == "timeBtn") {
+    } else if (arg == "fileDateBtn") {
         if (filePath != null) {
-            upload(filePath, 1602);
+            upload(filePath, fileDate);
             dialog.showMessageBox({
                 title: "Save file",
                 icon: __dirname + '/translate.png',
@@ -118,6 +127,10 @@ ipcMain.on("name", function (evnt, arg) {
     name = arg;
 });
 
+ipcMain.on("fileDate", function (evnt, arg) {
+    fileDate = arg;
+});
+
 let data = [];
 
 console.log("App starting");
@@ -138,7 +151,8 @@ async function convert(convertFilepath, saveFilePath, pageBuilding) {
 /* **************************************************************** */
 async function upload(convertFilepath, dataDate) {
     await readFileToJson(convertFilepath.toString());
-    uploadData.sendToInflux(data, dataDate);
+    // uploadData.sendToInflux(data, dataDate);
+    await uploadData.sendToPostgress(data, dataDate);
     console.log("async upload Done");
 }
 
@@ -148,6 +162,9 @@ async function upload(convertFilepath, dataDate) {
 async function readFileToJson(path) {
     // Reading the file from the computer
     var file = reader.readFile(path);
+
+    // reset data
+    data = [];
 
     // take alle data from sheet to json
     var temp = reader.utils.sheet_to_json(file.Sheets[file.SheetNames[0]]);
