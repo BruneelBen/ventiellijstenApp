@@ -12,14 +12,6 @@ const client = new InfluxDB({ url: 'http://192.168.0.21:8086', token: token })
 
 const { Point } = require('@influxdata/influxdb-client')
 
-const pool = new Pool({
-    user: 'postgres',
-    host: '192.168.0.21',
-    database: 'varkens',
-    password: 'password',
-    port: 5431,
-});
-
 function sendToInflux(data, dataDate) {
     var splitString, stal, afdeling, ventiel, year, month, day, dataDateOut, point;
     const writeApi = client.getWriteApi(org, bucket)
@@ -57,6 +49,13 @@ function sendToInflux(data, dataDate) {
 async function sendToPostgress(data, dataDate) {
     var values = [];
     var splitString, stal, afdeling, ventiel, year, month, day, dataDateOut;
+    const pool = new Pool({
+        user: 'postgres',
+        host: '192.168.0.21',
+        database: 'varkens',
+        password: 'password',
+        port: 5431,
+    });
 
     data.forEach(row => {
         var rij = [];
