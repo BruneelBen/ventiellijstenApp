@@ -2,10 +2,10 @@
 // Define font files
 var fonts = {
   Roboto: {
-    normal: './fonts/Roboto-Regular.ttf',
-    bold: './fonts/Roboto-Medium.ttf',
-    italics: './fonts/Roboto-Italic.ttf',
-    bolditalics: './fonts/Roboto-MediumItalic.ttf'
+    normal: '/opt/Ventiellijsten converter/fonts/Roboto-Regular.ttf',
+    bold: '/opt/Ventiellijsten converter/fonts/Roboto-Medium.ttf',
+    italics: '/opt/Ventiellijsten converter/fonts/Roboto-Italic.ttf',
+    bolditalics: '/opt/Ventiellijsten converter/fonts/Roboto-MediumItalic.ttf'
   }
 };
 

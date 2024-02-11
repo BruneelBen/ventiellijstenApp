@@ -8,7 +8,7 @@ const { exit } = require('process');
 // make a class manage config savement
 class store {
     constructor() {
-        this.path = path.join('./config.json');
+        this.path = path.join('/opt/Ventiellijsten converter/config.json');
         this.read();
     }
 

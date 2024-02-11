@@ -24,7 +24,8 @@ function createWindow() {
         height: 600,
         icon: __dirname + '/translate.png',
         webPreferences: {
-            nodeIntegration: true
+            nodeIntegration: true,
+            contextIsolation: false,
         }
     });
     win.removeMenu();
@@ -74,7 +75,7 @@ ipcMain.on("btn", function (evnt, arg) {
         }
     } else if (arg == "saveBtn") {
         if (filePath != null && directoryPath != null && name != null) {
-            convert(filePath, directoryPath + "\\" + name + ".pdf", pageBuilding);
+            convert(filePath, directoryPath + "/" + name + ".pdf", pageBuilding);
             dialog.showMessageBox({
                 title: "Save file",
                 icon: __dirname + '/translate.png',

@@ -11,7 +11,7 @@
     "lint": "echo \"No linting configured\"",
     "dist": "electron-builder"
   },
-  "author": "Ben Bruneel",
+  "author": "Ben <benbruneel.bb@gmail.com>",
   "license": "MIT",
   "config": {
     "forge": {
@@ -20,7 +20,7 @@
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "tron_forge"
+            "name": "my_electron_app"
           }
         },
         {
@@ -51,14 +51,14 @@
     "xlsx": "^0.17.2"
   },
   "devDependencies": {
-    "@electron-forge/cli": "^6.0.0-beta.50",
-    "@electron-forge/maker-deb": "^6.0.0-beta.50",
-    "@electron-forge/maker-rpm": "^6.0.0-beta.50",
-    "@electron-forge/maker-squirrel": "^6.0.0-beta.50",
-    "@electron-forge/maker-zip": "^6.0.0-beta.50",
+    "@electron-forge/cli": "^6.0.0-beta.61",
+    "@electron-forge/maker-deb": "^6.0.0-beta.61",
+    "@electron-forge/maker-rpm": "^6.0.0-beta.61",
+    "@electron-forge/maker-squirrel": "^6.0.0-beta.61",
+    "@electron-forge/maker-zip": "^6.0.0-beta.61",
     "devtron": "^1.4.0",
-    "electron": "11.5.0",
-    "electron-builder": "^22.13.1"
+    "electron": "^28.2.2",
+    "electron-builder": "^24.9.1"
   },
   "build": {
     "appId": "com.electron.ventiellijstenapp",
@@ -73,6 +73,13 @@
       "allowToChangeInstallationDirectory": true,
       "oneClick": false,
       "license": "LICENSE"
+    },
+    "linux": {
+      "target": [
+        "deb",
+        "snap"
+      ],
+      "category": "Utility"
     }
   }
 }
